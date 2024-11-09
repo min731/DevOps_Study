@@ -1,7 +1,7 @@
 # DevOps_Study
 🏆 완강 : 24.11.04 ~ ing
 
-![image](https://github.com/min731/Docker_Kubernetes_Study/assets/115389344/b86b7d1c-53df-4abc-8eec-92534d6a69a6)
+![image](https://github.com/user-attachments/assets/b317d1a8-429e-476f-9769-ea613c77c30e)
 
 * DevOps 쿠버네티스 공부 내용입니다!
 
