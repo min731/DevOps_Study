@@ -12,7 +12,7 @@ spec:
       labels:
         app: lifecycle
     spec:
-      initContainers:
+      initContainers: # main container 시작 전 실행
       - name:           init
         image:          busybox
         command:       ['sh', '-c', 'sleep 10']
@@ -29,10 +29,10 @@ spec:
             command: ['sh', '-c', 'echo $(date +%s): livenessProbe >> /timing']
           initialDelaySeconds: 35
           timeoutSeconds: 30
-        lifecycle:
-          postStart:
+        lifecycle: 
+          postStart: # pre start hook (main container가 시작할 때)
             exec:
               command: ['sh', '-c', 'echo $(date +%s): postStart >> /timing && sleep 10 && echo $(date +%s): end postStart >> /timing']
-          preStop:
+          preStop: # pre stop hook (main container가 종료될 때)
             exec:
               command: ['sh', '-c', 'echo $(date +%s): preStop >> /timing && sleep 10']
