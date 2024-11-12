@@ -15,6 +15,8 @@ spec:
       containers:
       - name: k8s-demo
         image: wardviaene/k8s-demo
+        # image: ypd04208625/express-test:2
+        # image: express-test
         command: ["node", "index-db.js"]
         ports:
         - name: nodejs-port
