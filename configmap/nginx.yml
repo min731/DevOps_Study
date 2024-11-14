@@ -12,9 +12,10 @@ spec:
     - containerPort: 80
     volumeMounts:
     - name: config-volume
-      mountPath: /etc/nginx/conf.d
+      mountPath: /etc/nginx/conf.d # 해당 경로에
   - name: k8s-demo
-    image: wardviaene/k8s-demo
+    # image: wardviaene/k8s-demo
+    image: ypd04208625/express-test
     ports:
     - containerPort: 3000
   volumes:
@@ -22,5 +23,5 @@ spec:
       configMap:
         name: nginx-config
         items:
-        - key: reverseproxy.conf
-          path: reverseproxy.conf
+        - key: reverseproxy.conf # cm의 key
+          path: reverseproxy.conf # 저장할 파일 이름
