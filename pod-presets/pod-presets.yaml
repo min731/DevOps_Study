@@ -1,4 +1,7 @@
 apiVersion: settings.k8s.io/v1alpha1   # you might have to change this after PodPresets become stable 
+# cluster에
+# extraArgs:
+#      enable-admission-plugins: PodPreset 적용해주어야함
 kind: PodPreset
 metadata:
   name: share-credential

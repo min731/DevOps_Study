@@ -1,8 +1,9 @@
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: standard
-provisioner: kubernetes.io/aws-ebs
+  name: standard-2
+  # name: db-storage
+provisioner: kubernetes.io/aws-ebs # aws 연동 필요
 parameters:
   type: gp2
   zone: eu-west-1a

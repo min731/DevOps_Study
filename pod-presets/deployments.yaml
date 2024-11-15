@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: k8s-demo
-        image: wardviaene/k8s-demo
+        # image: wardviaene/k8s-demo
+        image: ypd04208625/express-test
         ports:
         - name: nodejs-port
           containerPort: 3000
@@ -35,7 +36,8 @@ spec:
     spec:
       containers:
       - name: k8s-demo
-        image: wardviaene/k8s-demo
+        # image: wardviaene/k8s-demo
+        image: ypd04208625/express-test
         ports:
         - name: nodejs-port
           containerPort: 3000

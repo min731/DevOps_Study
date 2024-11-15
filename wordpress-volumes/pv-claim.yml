@@ -2,9 +2,10 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: db-storage
-  annotations:
-    volume.beta.kubernetes.io/storage-class: "standard"
+  # annotations:
+  #   volume.beta.kubernetes.io/storage-class: "standard-2"
 spec:
+  storageClassName: standard-2
   accessModes:
     - ReadWriteOnce
   resources:
