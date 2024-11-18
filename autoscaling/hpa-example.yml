@@ -48,3 +48,6 @@ spec:
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 50
+
+# 최초 실행 시, deployment의 replicas 만큼 실행, 이후 min~max replicas로 조절
+# metrics-server 가동 시 사용 가능

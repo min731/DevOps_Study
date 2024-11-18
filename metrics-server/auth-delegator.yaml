@@ -11,3 +11,7 @@ subjects:
 - kind: ServiceAccount
   name: metrics-server
   namespace: kube-system
+
+# 리소스 모니터링
+# (1) metric-server
+# (2) heapseter -influxDB(시계열 DB) - Grafana
