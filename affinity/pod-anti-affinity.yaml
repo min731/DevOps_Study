@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: k8s-demo
-        image: wardviaene/k8s-demo
+        # image: wardviaene/k8s-demo
+        image: ypd04208625/express-test
         ports:
         - name: nodejs-port
           containerPort: 3000
@@ -42,7 +43,7 @@ spec:
                     operator: In
                     values:
                     - pod-affinity-1
-              topologyKey: "kubernetes.io/hostname"
+              topologyKey: "kubernetes.io/hostname" # 조건이 적용될 물리적 위치
       containers:
       - name: redis
         image: redis
@@ -65,7 +66,7 @@ spec:
         app: pod-affinity-3
     spec:
       affinity:
-        podAntiAffinity:
+        podAntiAffinity: # pod-affinity-1 와 다른 노드에
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
@@ -97,15 +98,15 @@ spec:
     spec:
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution: # preferred로 바꾸면 배포 는 됌
             - labelSelector:
                 matchExpressions:
                   - key: "app"
                     operator: In
                     values:
                     - pod-affinity-1
-                    - pod-affinity-3
-              topologyKey: "kubernetes.io/hostname"
+                    - pod-affinity-3 # 1,3 둘 다 없는 곳에 배치해야함
+              topologyKey: "kubernetes.io/hostname" # 기준, 노드 호스트명
       containers:
       - name: k8s-demo
         image: wardviaene/k8s-demo
@@ -113,3 +114,8 @@ spec:
         - name: nodejs-port
           containerPort: 3000
 ---
+
+
+# Affinity와 Anti-Affinity의 중요성
+# Pod Affinity: 특정 Pod와 같은 노드에 배치해야 하는 상황에 사용합니다. 예를 들어, 데이터베이스와 애플리케이션 서버를 동일한 노드에 배치하여 데이터 전송을 빠르게 할 수 있습니다.
+# Pod Anti-Affinity: 특정 Pod와 다른 노드에 배치해야 하는 상황에 사용합니다. 예를 들어, 장애 발생 시 영향을 최소화하기 위해 Pod를 분리합니다.

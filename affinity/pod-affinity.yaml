@@ -1,3 +1,4 @@
+# 배포된 pod와 같은 노드에 배포되어야 할때
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,7 +15,8 @@ spec:
     spec:
       containers:
       - name: k8s-demo
-        image: wardviaene/k8s-demo
+        # image: wardviaene/k8s-demo
+        image: ypd04208625/express-test
         ports:
         - name: nodejs-port
           containerPort: 3000
@@ -38,11 +40,11 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
-                  - key: "app"
+                  - key: "app" # 해당 key / value label을 갖는 pod가 위치하면
                     operator: In
                     values:
                     - pod-affinity-1
-              topologyKey: "kubernetes.io/hostname"
+              topologyKey: "kubernetes.io/hostname" # 이 노드 호스트명을 갖는 노드에 배포
       containers:
       - name: redis
         image: redis

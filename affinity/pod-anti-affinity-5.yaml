@@ -1,3 +1,4 @@
+# 배포된 pod와 다른 노드에 배포되어야 할 때
 apiVersion: apps/v1
 kind: Deployment
 metadata:

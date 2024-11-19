@@ -14,14 +14,14 @@ spec:
     spec:
       affinity:
         nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution: # 필수 key / value
             nodeSelectorTerms:
             - matchExpressions:
               - key: env
                 operator: In
                 values:
                 - dev
-          preferredDuringSchedulingIgnoredDuringExecution:
+          preferredDuringSchedulingIgnoredDuringExecution: # 선호 되는 key / value
           - weight: 1
             preference:
               matchExpressions:
@@ -31,7 +31,8 @@ spec:
                 - engineering-project1
       containers:
       - name: k8s-demo
-        image: wardviaene/k8s-demo
+        # image: wardviaene/k8s-demo
+        image: ypd04208625/express-test
         ports:
         - name: nodejs-port
           containerPort: 3000
