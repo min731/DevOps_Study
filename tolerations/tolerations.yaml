@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: k8s-demo
-        image: wardviaene/k8s-demo
+        # image: wardviaene/k8s-demo
+        image: ypd04208625/express-test
         ports:
         - name: nodejs-port
           containerPort: 3000
@@ -38,9 +39,17 @@ spec:
         operator: "Equal"
         value: "specialnode"
         effect: "NoSchedule"
+        # taint 된 노드에 pod가 이미 실행중이였다면 3600초 후 제거
+        # effect: "NoExcute"
+        # tolerationSeconds: 3600
       containers:
       - name: k8s-demo
-        image: wardviaene/k8s-demo
+        # image: wardviaene/k8s-demo
+        image: ypd04208625/express-test
         ports:
         - name: nodejs-port
           containerPort: 3000
+
+
+# nodeaffinity는 파드를 특정 노드에 배포하게, 파드에 적용
+# toleration는 파드를 특정 노드에 배포하지 못하게, 노드에 적용
