@@ -3,6 +3,7 @@ kind: Namespace
 metadata:
   name: myspace
 ---
+# cpu/memory 등 컴퓨팅에 대한 제한
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -15,6 +16,7 @@ spec:
     limits.cpu: "2"
     limits.memory: 2Gi
 ---
+# pod, cm 등 obejct에 대한 제한
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -28,3 +30,45 @@ spec:
     secrets: "10"
     services: "10"
     services.loadbalancers: "2"
+
+#확인 방법
+# k get quota
+
+# 명령어 줄임말
+
+# kubectl -> k
+# get -> g
+# describe -> desc
+# delete -> del
+
+# namespaces -> ns
+# pods -> po
+# services -> svc
+# deployments -> deploy
+
+# replicasets -> rs 
+
+# persistentvolumes -> pv
+# persistentvolumeclaims -> pvc
+# configmaps -> cm
+
+# endpoints -> ep
+
+# events -> ev
+
+# ingresses -> ing
+
+# nodes -> no
+
+# serviceaccounts -> sa
+# daemonsets -> ds
+
+# statefulsets -> sts
+
+# horizontalpodautoscalers -> hpa
+
+# certificatesigningrequests -> csr
+
+# resourcequotas -> quota
+
+# cronjobs -> cj

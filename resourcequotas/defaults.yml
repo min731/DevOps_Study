@@ -12,3 +12,10 @@ spec:
       cpu: 100m
       memory: 256Mi
     type: Container
+
+# k get limitrange -A
+# 'LimitRange' object를 설정해주면(conatainer 등) deployment에 따로 지정해주지 않아도 됌
+
+# 리소스 설정 후 배포 방법
+# (1) 'resourcequota'를 고려한 requests/limits가 설정된 'deployment' 배포
+# (2) 'resourcequota'를 설정하고 'container 등 obejct에 대한 'LimitRange'를 배포한 뒤 'deploymnet' 배포

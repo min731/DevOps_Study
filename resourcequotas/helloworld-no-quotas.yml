@@ -1,3 +1,5 @@
+# 배포할 ns에 resourcequota가 지정되어 있다면
+# 반드시 object에 request, limits을 지정해주어야함
 apiVersion: apps/v1
 kind: Deployment
 metadata:

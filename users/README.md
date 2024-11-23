@@ -1,3 +1,8 @@
+## Cluster에서 RBAC을 사용할 수 있게 실행
+```bash
+minikube start --extra-config=apiserver.Authorization.Mode=RBAC
+```
+
 ## Retrieve keys from kops
 ```
 aws s3 sync s3://kops-state-b429b/kubernetes.newtech.academy/pki/private/ca/ ca-key
