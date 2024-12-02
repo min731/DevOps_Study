@@ -54,6 +54,7 @@ func (s Server) postWebhook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add label if we're creating a pod
+	// 파드가 생성되면 메타데이터에 label을 Patch함
 	if request.Request.Kind.Group == "" && request.Request.Kind.Version == "v1" && request.Request.Kind.Kind == "Pod" && request.Request.Operation == "CREATE" {
 		patch := `[{"op": "add", "path": "/metadata/labels/myExtraLabel", "value": "webhook-was-here"}]`
 		patchEnc := base64.StdEncoding.EncodeToString([]byte(patch))

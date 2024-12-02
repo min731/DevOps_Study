@@ -1,14 +1,14 @@
 apiVersion: admissionregistration.k8s.io/v1
-kind: MutatingWebhookConfiguration
+kind: MutatingWebhookConfiguration # Cluster 상(클러스터 전역 객체)에서 배포되는 Object에 대한 변형 웹훅 정의
 metadata:
   name: "mymutatingwebhook.example.com"
 webhooks:
 - name: "mymutatingwebhook.example.com"
   namespaceSelector:
     matchLabels:
-      webhook: enabled
+      webhook: enabled # 레이블이 일치한 ns에 적용됌
   rules:
-  - apiGroups:   [""]
+  - apiGroups:   [""] # pod를 생성할 때 정책
     apiVersions: ["v1"]
     operations:  ["CREATE"]
     resources:   ["pods"]
@@ -17,7 +17,7 @@ webhooks:
       namespace: "mutatingwebhook"
       name: "mutatingwebhook"
       path: "/webhook"
-    caBundle: "cGxhY2Vob2xkZXIK"
+    caBundle: "cGxhY2Vob2xkZXIK" # 웹훅은 기본적으로 TLS로 실행됌
   admissionReviewVersions: ["v1", "v1beta1"]
   sideEffects: None
   timeoutSeconds: 5
@@ -35,7 +35,7 @@ metadata:
     webhook: enabled
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: Deployment # Pod를 생성할 때 Deployment가 없다면, Pod 생성이 불가함
 metadata:
   name: mutatingwebhook
   namespace: mutatingwebhook
@@ -53,7 +53,7 @@ spec:
     spec:
       containers:
       - name: mutatingwebhook
-        image: wardviaene/mutatingwebhook-example
+        image: wardviaene/mutatingwebhook-example # golang conatainer
         ports:
         - containerPort: 8443
 ---

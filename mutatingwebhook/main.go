@@ -19,6 +19,7 @@ import (
 func main() {
 
 	// setup certs
+	// ssl 인증서 만들기
 	fmt.Printf("Initializing certificates...\n")
 	serverTLSConf, clientTLSConf, caPEM, err := certsetup()
 	if err != nil {
@@ -34,6 +35,7 @@ func main() {
 	go func() {
 		handler := http.NewServeMux()
 
+		// 인증서 다운로드를 위함
 		handler.HandleFunc("/ca.pem", s.getCA)
 		fmt.Printf("Starting localhost http server on :8080 with ca.pem endpoint\n")
 		err = http.ListenAndServe("localhost:8080", handler)
@@ -44,8 +46,10 @@ func main() {
 	}()
 
 	// start TLS server
+	// 인증서 서버 시작
 	fmt.Printf("Starting TLS server on :8443\n")
 	handler := http.NewServeMux()
+	// /webhook에서 인증
 	handler.HandleFunc("/webhook", s.postWebhook)
 
 	https := &http.Server{

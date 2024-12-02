@@ -11,3 +11,5 @@ spec:
     image: ubuntu:latest
     command: ["/bin/sleep", "1d"]
     imagePullPolicy: IfNotPresent
+
+# 해당 파드를 실행하면 mutating webhook(ssl 인증)을 거쳐 label이 추가됌 
