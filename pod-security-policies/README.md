@@ -2,6 +2,7 @@
 
 ## Minikube
 
+# psp = podsecuritypolicy
 ```
 mkdir -p ~/.minikube/files/etc/kubernetes/addons/
 cp initial-psp.yaml ~/.minikube/files/etc/kubernetes/addons/psp.yaml

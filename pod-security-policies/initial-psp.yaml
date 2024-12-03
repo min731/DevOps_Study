@@ -1,3 +1,4 @@
+ # 여러 psp 정의
 ---
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
@@ -7,7 +8,7 @@ metadata:
     seccomp.security.alpha.kubernetes.io/allowedProfileNames: "*"
   labels:
     addonmanager.kubernetes.io/mode: EnsureExists
-spec:
+spec: # pod를 실행할 수 있는 규칙
   privileged: true
   allowPrivilegeEscalation: true
   allowedCapabilities:

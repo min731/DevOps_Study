@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - securityContext:
-          runAsUser: 100
+          runAsUser: 100 # UID 100으로 실행, 만약 securityContext 자체가 없다면, 숫자가 아닌 사용자가 실행하였으므로 배포 불가
         name: hello
         image: wardviaene/http-echo
         env:

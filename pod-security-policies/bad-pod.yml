@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - securityContext:
-          runAsUser: 0
+          runAsUser: 0 # UID root를 의미, root로는 실행 불가
         name: hello-2
         image: wardviaene/http-echo
         env:
