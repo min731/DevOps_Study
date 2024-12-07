@@ -54,9 +54,35 @@ mariadb:
   auth:
     database: app
     username: app-user
-  master:
+  # master: # primary와 중복될 수 있음
+  #   persistence:
+  #     enabled: true
+  #     accessMode: ReadWriteOnce
+  #     size: 8Gi
+  primary: # mariadb에 접근할 수 있게끔 권한 설정 추가
     persistence:
       enabled: true
-      accessMode: ReadWriteOnce
       size: 8Gi
-
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+      runAsUser: 1001
+    # 볼륨 권한을 명시적으로 설정
+    persistence:
+      accessModes:
+        - ReadWriteOnce
+      mountPath: /bitnami/mariadb
+      subPath: ""
+      # initContainer를 통한 권한 설정
+      initContainers:
+        - name: volume-permissions
+          image: busybox
+          command: ['sh', '-c', 'chmod -R 777 /bitnami/mariadb']
+          volumeMounts:
+            - name: data
+              mountPath: /bitnami/mariadb
