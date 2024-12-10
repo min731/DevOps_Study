@@ -1,9 +1,9 @@
 apiVersion: skaffold/v1
 kind: Config
-build:
+build: # 빌드
   artifacts:
   - image: wardviaene/skaffold-demo
-deploy:
+deploy: # 배포
   kubectl:
     manifests:
-      - k8s-*
+      - k8s-* # k8s로 시작하는 배포 파일, pod/service 등
