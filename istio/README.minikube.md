@@ -7,7 +7,7 @@
 ```
 minikube start --memory=8192 --cpus=4 --kubernetes-version=v1.10.0 --vm-driver=`your_vm_driver_choice`
 ```
-
+# cpu 4코어, 메모리 8기가 클러스터 필요
 
 ## download (1.0.3):
 ```
