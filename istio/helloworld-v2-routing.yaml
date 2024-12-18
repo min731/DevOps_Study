@@ -3,8 +3,8 @@ kind: DestinationRule
 metadata:
   name: hello
 spec:
-  host: hello.default.svc.cluster.local
-  subsets:
+  host: hello.default.svc.cluster.local # 이 service로 요청할 때
+  subsets: # 두개의 subets을 지정함 v1, v2로 명명함
   - name: v1
     labels:
       version: v1
@@ -18,23 +18,35 @@ metadata:
   name: helloworld
 spec:
   hosts:
-  - "hello.example.com"
+  # - "hello.example.com"
+  - "helloworld-jmlim.com"
   gateways:
   - helloworld-gateway
   http:
-  - match:
+  - match: # header에 john이 있을 때는 v2로 라우팅
     - headers:
         end-user:
           exact: john
     route:
     - destination:
         host: hello.default.svc.cluster.local
-        subset: v2 # match v2 only
+        # DestinationRule에서 정한 규칙대로
+        subset: v2 # match v2 only 
         port:
           number: 8080
   - route: # default route for hello.example.com
     - destination:
         host: hello.default.svc.cluster.local
+        # DestinationRule에서 정한 규칙대로
         subset: v1 # match v1 only
         port:
           number: 8080
+
+# istio virtualservice를 활용하면
+# host 기반 혹은 header 기반으로 라우팅 규칙을 설정할 수 있다.
+
+# curl -v -H "Host: helloworld-jmlim.com" http://minikube.jmlim-cluster.com:30998/hello
+# 이면 v1
+
+# curl -v -H "Host: helloworld-jmlim.com" http://minikube.jmlim-cluster.com:30998/hello
+# 이면 v2

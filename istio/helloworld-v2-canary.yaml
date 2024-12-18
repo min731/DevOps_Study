@@ -18,7 +18,8 @@ metadata:
   name: helloworld
 spec:
   hosts:
-  - "hello.example.com"
+  # - "hello.example.com"
+  - "helloworld-jmlim.com"
   gateways:
   - helloworld-gateway
   http:
@@ -28,10 +29,21 @@ spec:
         subset: v1
         port:
           number: 8080
-      weight: 90
+      # 각 subset 별로 가중치를 두어 배포
+      # weight: 90
+      weight: 50
     - destination:
         host: hello.default.svc.cluster.local
         subset: v2
         port:
           number: 8080
-      weight: 10
+      # 각 subset 별로 가중치를 두어 배포
+      # weight: 10
+      weight: 50
+
+# 카나리 배포 == 가중치 
+
+# istio virtualservice를 통해
+# hostname / header / canary 등의 routing을 구현할 수 있다.
+
+#for ((i=1;1<=10;i++)); do curl -v -H "Host: helloworld-jmlim.com" http://minikube.jmlim-cluster.com:30998/hello; done

@@ -1,33 +1,40 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: helloworld-gateway
+  name: httpbin-gateway
+  namespace: httpbin
 spec:
   selector:
-    istio: ingressgateway # use istio default controller
+    istio: ingressgateway
   servers:
   - port:
       number: 80
       name: http
       protocol: HTTP
     hosts:
-    - "*"
+    # - "*" #둘다 가능
+    - "httpbin-jmlim.com" #둘다 가능
+
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: helloworld
+  name: httpbin
+  namespace: httpbin
 spec:
   hosts:
-  - "helloworld-jmlim.com"
+  - "httpbin-jmlim.com"
+  # - "*"
   gateways:
-  - helloworld-gateway
+  - httpbin-gateway
   http:
   - match:
     - uri:
-        prefix: /hello
+        prefix: /status
+    - uri:
+        prefix: /delay
     route:
     - destination:
-        host: hello.default.svc.cluster.local
         port:
-          number: 8080
+          number: 8000
+        host: httpbin
