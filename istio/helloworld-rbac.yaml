@@ -7,6 +7,7 @@ spec:
   rules:
   - services: ["hello.default.svc.cluster.local"]
     methods: ["GET", "HEAD"]
+# hello Service에 GET, HEAD 할 수 있는 규칙
 ---
 apiVersion: "rbac.istio.io/v1alpha1"
 kind: ServiceRole
@@ -40,6 +41,8 @@ spec:
   roleRef:
     kind: ServiceRole
     name: "hello-viewer"
+# istio-system의 Object에서는 hello-viewer('hello' Service에 GET,HEAD)
+# 가능하다는 ServiceRole을 적용 (ServiceAccount 활용)
 ---
 apiVersion: "rbac.istio.io/v1alpha1"
 kind: ServiceRoleBinding
@@ -251,3 +254,12 @@ spec:
   - name: v1
     labels:
       version: v1
+
+
+# RBAC을 활용하여 Clusterip type의 Service로 
+# 내부 통신하는 부분을 제어할 수 있다
+# A Service에서 B Service로는 가능하지만,
+# A Service에서 C Service로는 불가능하게 제어 가능
+
+# ServiceRole로 규칙을 정의하고
+# ServiceRoleBinding에 SerivceAccount를 통해 Service에 적용

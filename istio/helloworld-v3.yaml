@@ -91,7 +91,12 @@ spec:
         subset: v3 # match v3 only
         port:
           number: 8080
-    timeout: 10s
-    retries:
-      attempts: 2
-      perTryTimeout: 2s
+    timeout: 10s # 응답까지 기다리는 시간,
+    #해당 서비스로의 요청이 10s가 지나면 중단
+    
+    # retries:
+    #   attempts: 2 # 재시도 횟수
+    #   perTryTimeout: 2s # 2s 동안 응답하지 않으면 재요청(타 pod로 갈 수 있음)
+
+# k get destinationrule
+# k get dr

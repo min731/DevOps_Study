@@ -1,0 +1,232 @@
+### ServiceAccounts
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: hello
+  namespace: default
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: world
+  namespace: default
+---
+### AuthorizationPolicies
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: hello-viewer
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: hello
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces: ["istio-system"]
+    to:
+    - operation:
+        methods: ["GET", "HEAD"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: world-viewer
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: world
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/default/sa/hello"]
+    to:
+    - operation:
+        methods: ["GET", "HEAD"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: world-2-viewer
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: world-2
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/default/sa/world"]
+    to:
+    - operation:
+        methods: ["GET", "HEAD"]
+---
+### Deployments
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+        version: v1
+    spec:
+      serviceAccountName: hello
+      containers:
+      - name: hello
+        image: wardviaene/http-echo
+        env:
+        - name: TEXT
+          value: hello
+        - name: NEXT
+          value: "world:8080"
+        ports:
+        - name: http
+          containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: world
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: world
+  template:
+    metadata:
+      labels:
+        app: world
+        version: v1
+    spec:
+      serviceAccountName: world
+      containers:
+      - name: world
+        image: wardviaene/http-echo
+        env:
+        - name: TEXT
+          value: world
+        - name: NEXT
+          value: "world-2:8080"
+        ports:
+        - name: http
+          containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: world-2
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: world-2
+  template:
+    metadata:
+      labels:
+        app: world-2
+        version: v1
+    spec:
+      containers:
+      - name: world-2
+        image: wardviaene/http-echo
+        env:
+        - name: TEXT
+          value: "!!!"
+        ports:
+        - name: http
+          containerPort: 8080
+---
+### Services
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello
+  namespace: default
+  labels:
+    app: hello
+spec:
+  selector:
+    app: hello
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: world
+  namespace: default
+  labels:
+    app: world
+spec:
+  selector:
+    app: world
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: world-2
+  namespace: default
+  labels:
+    app: world-2
+spec:
+  selector:
+    app: world-2
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+---
+### Gateway & VirtualService
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: helloworld-gateway
+  namespace: default
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: helloworld
+  namespace: default
+spec:
+  hosts:
+  - "hello-rbac.example.com"
+  gateways:
+  - helloworld-gateway
+  http:
+  - route:
+    - destination:
+        host: hello.default.svc.cluster.local
+        port:
+          number: 8080

@@ -38,3 +38,6 @@ spec:
         port:
           number: 8000
         host: httpbin
+
+# curl 시간측정
+# time curl ~~~

@@ -200,6 +200,8 @@ metadata:
 spec:
   host: hello.ns1.svc.cluster.local
   # uncomment to enable mutual TLS
+  # istio sidecar proxy가 활성화 되어 있어야만
+  # mTLS 구현이 가능
   trafficPolicy:
     tls:
       mode: ISTIO_MUTUAL
@@ -256,3 +258,12 @@ spec:
         subset: v1-tls 
         port:
           number: 8080
+
+
+# Istio
+# 1. HTTP URI 기반 라우팅 (Virtualservice)
+# 2. HEADER 기반 라우팅 (Virtualservice)
+# 3. Canary 배포 (Virtualservice)
+# 4. Retries 설정 (Virtualservice)
+# 5. TLS (Gateway)
+# 6. mTLS (Virtualservice, Destinationrule)
