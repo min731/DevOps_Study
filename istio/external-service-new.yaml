@@ -1,0 +1,114 @@
+# google-external-access.yaml
+---
+# HTTP ServiceEntry
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: google-http
+spec:
+  hosts:
+  - www.google.com
+  ports:
+  - number: 80
+    name: http
+    protocol: HTTP
+  resolution: DNS
+  location: MESH_EXTERNAL
+---
+# HTTPS ServiceEntry
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: google-https
+spec:
+  hosts:
+  - www.google.com
+  ports:
+  - number: 443
+    name: https
+    protocol: HTTPS
+  resolution: DNS
+  location: MESH_EXTERNAL
+---
+# HTTPS Gateway
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: google-https-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: PASSTHROUGH
+    hosts:
+    - "www.google.com"
+---
+# HTTP Gateway
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: google-http-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "www.google.com"
+---
+# VirtualService for HTTP
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: google-http
+spec:
+  hosts:
+  - "www.google.com"
+  gateways:
+  - google-http-gateway
+  http:
+  - route:
+    - destination:
+        host: www.google.com
+        port:
+          number: 80
+---
+# VirtualService for HTTPS
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: google-https
+spec:
+  hosts:
+  - "www.google.com"
+  gateways:
+  - google-https-gateway
+  tls:
+  - match:
+    - port: 443
+      sniHosts:
+      - www.google.com
+    route:
+    - destination:
+        host: www.google.com
+        port:
+          number: 443
+
+# 클러스터 내에서 외부 서비스로 요청할 때
+# ServiceEntry 활용
+# https는 Virtualservice에 명시 필요
+
+
+# http
+# curl -v -H "Host: www.google.com" http://minikube.jmlim-cluster.com:30998
+
+# https
+# curl -v -k --resolve www.google.com:32483:192.168.49.2 https://www.google.com:32483

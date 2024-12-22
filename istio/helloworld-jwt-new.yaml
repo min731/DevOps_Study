@@ -1,0 +1,170 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: helloworld-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: helloworld-auth
+spec:
+  hosts:
+  # - "auth.kubernetes.newtech.academy"
+  - "auth.com"
+  gateways:
+  - helloworld-gateway
+  http:
+  - route:
+    - destination:
+        host: auth.default.svc.cluster.local
+        port:
+          number: 8080
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: helloworld-hello
+spec:
+  hosts:
+  # - "hello.kubernetes.newtech.academy"
+  - "hello.com"
+  gateways:
+  - helloworld-gateway
+  http:
+  - route:
+    - destination:
+        host: hello.default.svc.cluster.local
+        port:
+          number: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+        version: v1
+    spec:
+      containers:
+      - name: auth
+        image: wardviaene/http-echo
+        env:
+        - name: TEXT
+          value: this is the authentication service
+        ports:
+        - name: http
+          containerPort: 8080
+
+# 접근하여 JWT 토큰 반환
+# curl -v -H "Host: auth.com" http://minikube.jmlim-cluster.com:30998/login -d '{"login": "edward"}'
+
+# 반환된 토큰을 활용하여 인증
+# curl -v -H "Host: hello.com" -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Im15a2V5IiwidHlwIjoiSldUIn0.eyJleHAiOjE3MzUxMDI5ODIsImdyb3VwcyI6InVzZXJzIiwiaWF0IjoxNzM0ODQzNzgyLCJpc3MiOiJodHRwLWVjaG9AaHR0cC1lY2hvLmt1YmVybmV0ZXMubmV3dGVjaC5hY2FkZW15IiwibG9naW4iOiJlZHdhcmQiLCJzdWIiOiJodHRwLWVjaG9AaHR0cC1lY2hvLmt1YmVybmV0ZXMubmV3dGVjaC5hY2FkZW15In0.VtOWG9k_3CCLhGSMG3OvV0mRZsxl1Zj44IRNXWF9nUG3ZJbtYVdefpNSztzoJIV4tfqaOn9w47DckZWTvazkPg8N0dqJztT6SOVltEj2MYxYdgdOFZ5QkyGH0F_LtmVorSshiRA3eP4VfEWi3IAv0LYCMhoo6RJEuB8VWbXsxxGG471ZeiPCHpMtj_U2I0vDVL30rWowPNyxZbv5xR40NPFD87P8bGyOt-Kg7mwgG1mZ8P4nrqDv2dXAKipQSx8Nk0uN6z9_9tZjyAc9Vm4XWebQGlLoRKTqhU-c9MaSF690NiHJh6eG709wkvUYV2iqzKNznKzgT_zcACc776gdtQ" \
+# http://minikube.jmlim-cluster.com:30998
+# Hello, you can only reach this service when authenticated
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+  labels:
+    app: auth
+spec:
+  selector:
+    app: auth
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+        version: v1
+    spec:
+      containers:
+      - name: hello
+        image: wardviaene/http-echo
+        env:
+        - name: TEXT
+          value: Hello, you can only reach this service when authenticated
+        ports:
+        - name: http
+          containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello
+  labels:
+    app: hello
+spec:
+  selector:
+    app: hello
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+###
+### Enable TLS
+###
+# ---
+# apiVersion: authentication.istio.io/v1alpha1
+# kind: "MeshPolicy"
+# metadata:
+#   name: "default"
+# spec:
+#   peers:
+#   - mtls: {}
+# ---
+# apiVersion: networking.istio.io/v1alpha3
+# kind: DestinationRule
+# metadata:
+#   name: "enable-mtls"
+#   namespace: "default" # even though we specify a namespace, this rule applies to all namespaces
+# spec:
+#   host: "*.local"
+#   trafficPolicy:
+#     tls:
+#       mode: ISTIO_MUTUAL
+# ---
+# apiVersion: networking.istio.io/v1alpha3
+# kind: DestinationRule
+# metadata:
+#  name: "api-server"
+# spec:
+#  host: "kubernetes.default.svc.cluster.local"
+#  trafficPolicy:
+#    tls:
+#      mode: DISABLE
+
+# istio-proxy를 통해 로그 확인
+# k logs auth-77d7c87455-r9qtt -n jwt -c istio-proxy

@@ -215,7 +215,7 @@ kind: DestinationRule
 metadata:
   name: hello-reverse
 spec:
-  host: hello-reverse.legacy.svc.cluster.local
+  host: hello-reverse.legacy.svc.cluster  .local
   # uncomment to enable mutual TLS
   trafficPolicy:
     tls:

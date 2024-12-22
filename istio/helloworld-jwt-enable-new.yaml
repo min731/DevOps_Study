@@ -1,0 +1,27 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: jwt-example
+  namespace: jwt
+spec:
+  selector:
+    matchLabels:
+      app: hello # 대상 애플리케이션 레이블
+  jwtRules:
+  - issuer: "http-echo@http-echo.kubernetes.newtech.academy"
+    jwksUri: "http://auth.kubernetes.newtech.academy/.well-known/jwks.json"
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-jwt
+  namespace: jwt
+spec:
+  selector:
+    matchLabels:
+      app: hello # 대상 애플리케이션 레이블
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        requestPrincipals: ["http-echo@http-echo.kubernetes.newtech.academy"]
