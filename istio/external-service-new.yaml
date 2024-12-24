@@ -111,4 +111,5 @@ spec:
 # curl -v -H "Host: www.google.com" http://minikube.jmlim-cluster.com:30998
 
 # https
+# curl -v -k --resolve www.google.com:32483:192.168.49.2 https://www.google.com
 # curl -v -k --resolve www.google.com:32483:192.168.49.2 https://www.google.com:32483
