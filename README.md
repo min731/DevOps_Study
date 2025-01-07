@@ -7,7 +7,7 @@
 
 📒 참고 강의 : https://www.udemy.com/course/best-devops/?couponCode=KEEPLEARNING <br>
 
-![image](https://github.com/user-attachments/assets/585755df-687c-42cc-961b-c3beb5bd0252)
+![image](https://github.com/user-attachments/assets/182e813c-578a-4119-a7d0-82e908f6e838)
 
 # Kubernetes course
 This repository contains the course files for my Kubernetes course on Udemy: https://www.udemy.com/learn-devops-the-complete-kubernetes-course/?couponCode=KUBERNETES_GITHUB
