@@ -22,3 +22,10 @@ spec:
                 name: myapp
                 port:
                   number: 3000
+
+# 주의
+# nginx ingress로 배포하고 접속 시에는
+# k get svc -n ingress-nginx의 NodePort로 접근!
+
+# istio gt / vs로 배포하고 접속 할 시에는
+# k get svc -n istio-system의 NodePort로 접근!

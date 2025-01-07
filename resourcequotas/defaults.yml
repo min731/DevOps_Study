@@ -19,3 +19,6 @@ spec:
 # 리소스 설정 후 배포 방법
 # (1) 'resourcequota'를 고려한 requests/limits가 설정된 'deployment' 배포
 # (2) 'resourcequota'를 설정하고 'container 등 obejct에 대한 'LimitRange'를 배포한 뒤 'deploymnet' 배포
+
+
+# 쿠버네티스 상의 1 코어 == 1 vCPU == 1000m(밀리코어) == 물리적 1 스레드

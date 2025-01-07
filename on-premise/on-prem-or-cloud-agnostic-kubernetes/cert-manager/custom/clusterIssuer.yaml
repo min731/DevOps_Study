@@ -1,0 +1,46 @@
+# cert-manger 배포 이후 (구현 후 label을 통해 cert-manager에서 검증함)
+
+# Let's Encrypt 활용 SSL 구현 및 Ingress 요청 방법
+# 1. cert-manager 배포
+# 2. ClusterIssuer 생성 (테스트용:Staging, 운영용:Prod) (Secret들 생성)
+# 3. Certificate 생성
+# 4. Ingress에 적용
+# curl -k https 443으로 인증서 없이 요청
+# curl https 433으로 인증서 포함 요청
+
+# cluster-issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging  # 테스트용 스테이징
+    # namespace: default
+  namespace: tls
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    # email: your-email@example.com  # 실제 이메일 주소로 변경
+    email: ypd04208@gmail.com
+    privateKeySecretRef: # 생성되는 secret (pricate key)
+      name: letsencrypt-staging 
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod  # 실제 운영용
+    # namespace: default
+  namespace: tls
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # email: your-email@example.com  # 실제 이메일 주소로 변경
+    email: ypd04208@gmail.com
+    privateKeySecretRef: # 생성되는 secret
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx

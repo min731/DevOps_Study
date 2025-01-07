@@ -1,0 +1,25 @@
+# ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp
+  namespace: tls
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"  # ClusterIssuer의 이름
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - myapp.newtech.academy
+    secretName: myapp-tls-cert # Certificate에서 정의한 secretName
+  rules:
+  - host: myapp.newtech.academy
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp
+            port:
+              number: 3000

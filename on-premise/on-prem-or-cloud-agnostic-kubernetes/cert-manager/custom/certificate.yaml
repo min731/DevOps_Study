@@ -1,0 +1,13 @@
+# certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: myapp-tls
+  namespace: tls
+spec:
+  secretName: myapp-tls-cert # secret 생성 (public key가 포함된 SSL 인증서)
+  dnsNames:
+  - myapp.newtech.academy
+  issuerRef:
+    name: letsencrypt-staging  # 처음에는 스테이징으로 테스트
+    kind: ClusterIssuer
